@@ -116,6 +116,13 @@ Keep this file in date order. **Every new decision gets an entry with context + 
 - **Why:** Mirrors the WINSSAS convention; opaque Guids avoid enumeration/guessing of identity keys and keep actor identification trustworthy (client cannot claim to be someone else).
 - **Consequences:** The `InitialAuth` migration was regenerated for the `uuid` column (dev DB only, re-seeded). Later domain entities (properties, clients, agreements, audit logs) should use `Guid` PKs too so `actor_user_id` FK types line up.
 
+## D-019 · 2026-09-03 — Generated SQL scripts kept in `Scripts/` alongside EF migrations
+
+- **Context:** Ops/DBAs and CI may need raw SQL rather than EF tooling; the source platform keeps SQL scripts in a top-level `Scripts/` folder.
+- **Decision:** Mirror that convention: one generated, idempotent SQL file per EF migration under `Scripts/` (`0001_InitialAuth.sql` today), produced with `dotnet ef migrations script`. EF Core migrations in `RealEstateERP.Infrastructure` remain the source of truth; startup still applies them via `MigrateAsync`.
+- **Why:** Cheap to generate, easy to review in PRs, and gives a runnable artifact for manual applies.
+- **Consequences:** Workflow rule — every new `dotnet ef migrations add` ships with a matching numbered script in the same commit; regenerate instructions live in `Scripts/README.md`. Seed data is **not** in scripts (inserted by `DbSeeder` at startup).
+
 ## D-017 · 2026-09-03 — App projects use newer EF/Npgsql patch versions than the vendored library
 
 - **Context:** Restore flagged **NU1903 (GHSA-x9vc-6hfv-hg8c)** — high-severity advisory on Npgsql 8.0.2, the version pinned by the source platform (and pulled transitively by `Infrastracture.Base.EF`).

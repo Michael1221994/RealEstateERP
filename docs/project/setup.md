@@ -120,7 +120,7 @@ dotnet ef database update --project src/RealEstateERP.Infrastructure --startup-p
 dotnet ef migrations add <Name> --project src/RealEstateERP.Infrastructure --startup-project src/RealEstateERP.API
 ```
 
-The initial migration (`InitialAuth`) already exists. Seed data is applied by `DbSeeder.SeedAdminAsync` at startup (idempotent). Additional lookup/tax-rate seed data (F-INF-03) will extend the seeder — do **not** rely on `EnsureCreated`.
+The initial migration (`InitialAuth`) already exists. **Each migration also ships as a generated SQL script under [`Scripts/`](../../Scripts/README.md)** (e.g. `Scripts/0001_InitialAuth.sql`) for manual/ops applies — add it in the same commit as the migration. Seed data is applied by `DbSeeder.SeedAdminAsync` at startup (idempotent). Additional lookup/tax-rate seed data (F-INF-03) will extend the seeder — do **not** rely on `EnsureCreated`.
 
 ## 6. Running
 
