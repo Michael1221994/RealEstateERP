@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PreserveCompilationContext>true</PreserveCompilationContext>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="itext" Version="9.3.0" />
+		<PackageReference Include="itext.bouncy-castle-adapter" Version="9.3.0" />
+		<PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.0" />
+		<PackageReference Include="itext7.pdfhtml" Version="6.2.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.2" />
+		<PackageReference Include="Minio" Version="6.0.3" />
+		<PackageReference Include="RazorEngine.NetCore" Version="3.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Apps\Library\SES.WINSSAS.Common\SES.WINSSAS.Common.csproj" />
+		<ProjectReference Include="..\Infrastracture.Base\Infrastracture.Base.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="ITextPdfGenerator\nyala.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,35 @@
+# Build outputs
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# .NET tooling
+*.user
+*.suo
+*.userprefs
+project.lock.json
+
+# IDE
+.vs/
+.idea/
+.vscode/
+*.swp
+
+# Local configuration & secrets (never commit real credentials)
+.env
+.env.*
+appsettings.Local.json
+secrets.json
+
+# Test / coverage output
+TestResults/
+coverage/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temp scratch
+/tmp
+*.log
