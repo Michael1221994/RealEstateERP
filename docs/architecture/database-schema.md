@@ -26,14 +26,15 @@ users
   last_login_at     timestamptz
   created_at, updated_at
 
-audit_logs
+audit_logs             -- append-only trail (F-AUTH-04, D-020); written automatically on SaveChanges
   id                uuid PK
-  actor_user_id     uuid FK -> users
-  action            varchar(100)   -- e.g. 'title.transferred', 'document.uploaded'
-  entity_type       varchar(100)
+  actor_user_id     uuid FK -> users   -- from JWT UserID claim; null for system actions (seeding)
+  action            varchar(100)   -- e.g. 'user.created', 'user.deactivated', 'title.transferred'
+  entity_type       varchar(100)   -- CLR type name, e.g. 'User'
   entity_id         uuid
-  details           jsonb
-  occurred_at       timestamptz    -- indexed
+  details           jsonb          -- changed-column diff (old -> new) only; password hashes redacted
+  occurred_at       timestamptz
+  -- indexes: (entity_type, entity_id, occurred_at), (occurred_at)
 ```
 
 ### clients (buyers, sellers, tenants, landlords, Delalas)

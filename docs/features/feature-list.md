@@ -20,7 +20,7 @@ Priorities: **P0** = needed for Phase 1 go-live core · **P1** = important · **
 - [x] **F-AUTH-01 — Login & JWT issuance** · P0 · ✅ (2026-09-03)
 - [x] **F-AUTH-02 — Role-based access control policies** · P0 · ✅ (2026-09-03)
 - [ ] **F-AUTH-03 — User CRUD & activation** · P1 · 🔶 (create/list/activate done; edit & delete pending)
-- [ ] **F-AUTH-04 — Audit log capture** · P0 · ⬜
+- [x] **F-AUTH-04 — Audit log capture** · P0 · ✅ (2026-09-04)
 - [ ] **F-AUTH-05 — Password change/reset** · P1 · ⬜
 
 ## Property (module: Property)

@@ -3,6 +3,7 @@ using Infrastracture.Base.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RealEstateERP.Core.Contract.Service;
 using RealEstateERP.Core.Features.Auth.Contract.Service;
 using RealEstateERP.Infrastructure.Context;
 using RealEstateERP.Infrastructure.Services;
@@ -57,6 +58,10 @@ public static class DependencyInjection
             new GenericRepository(sp.GetRequiredService<RealEstateDbContext>()));
 
         services.AddScoped<IAccessTokenService, AccessTokenService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+        // Needed by CurrentUserService to read the actor from the JWT claim.
+        services.AddHttpContextAccessor();
 
         return services;
     }

@@ -129,6 +129,18 @@ Keep this file in date order. **Every new decision gets an entry with context + 
 - **Decision:** The new app projects reference **EF Core 8.0.11, Npgsql 8.0.9, Npgsql.EntityFrameworkCore.PostgreSQL 8.0.11** directly. NuGet resolves these upward across the graph, so the vendored `Infrastracture.Base.EF` runs against the patched Npgsql too.
 - **Consequences:** Keep app-level EF/Npgsql pins at the newest 8.0.x patch. Do not lower them to match the vendored csproj values; consider updating the vendored csproj versions in a later, separate change (D-003 treats that project as vendored).
 
+## D-020 · 2026-09-04 — Audit trail: ChangeTracker-derived column diffs, written in-transaction
+
+- **Context:** F-AUTH-04 (P0). The BUC mandates auditability (who did what, when); `security.md` requires an append-only trail for user admin, status changes, payments, document uploads/deletes, config/rate changes.
+- **Decision:**
+  - One general `audit_logs` table (migration `AddAuditLog`, [`Scripts/0002_AddAuditLog.sql`](../../Scripts/0002_AddAuditLog.sql)): `actor_user_id` (FK `users`, null for system actions), `action` (`user.created`, `user.deactivated`, `property.updated`, …), `entity_type`, `entity_id`, `details` (`jsonb`), `occurred_at`. Indexed on `(entity_type, entity_id, occurred_at)` and `(occurred_at)`.
+  - `RealEstateDbContext` overrides `SaveChanges`/`SaveChangesAsync`: every Added/Modified/Deleted non-audit entity gets one row **in the same transaction**. No handler code writes audit rows — future modules get coverage for free.
+  - **Details carry only the changed columns (old → new)**, derived from the ChangeTracker (`OriginalValues` vs `CurrentValues`); creates/deletes snapshot key identifying fields. Never full row snapshots.
+  - Actor is the token's `UserID` claim resolved via `ICurrentUserService` (Infrastructure, `IHttpContextAccessor`); never a body value (D-018).
+  - Noise control: `CreatedAt`/`UpdatedAt`/`LastLoginAt` are never audited (routine logins produce no rows); `PasswordHash` redacted to a `{"changed": true}` marker; `audit_logs` itself is never audited (no recursion).
+- **Alternatives:** explicit `IAuditService.RecordAsync(...)` calls in every handler (precise action names, but easy to forget → gaps); full before/after row snapshots (rejected: ~10× table bloat at this scale).
+- **Consequences:** Audit rows are append-only (no update/delete endpoints). If the table grows large, archive via month-partitioning rather than deleting (ERCA record-keeping). Dedicated history tables (`property_status_history`, `title_transfer_events`) remain the richer trail for critical workflows (D-010); `audit_logs` covers everything else.
+
 ## D-015 · 2026-09-03 — Documentation-first workflow for this repo
 
 - **Context:** Living docs created for humans and AI assistants.

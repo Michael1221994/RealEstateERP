@@ -52,6 +52,7 @@ Applies to the API. Existing building blocks come from the imported libraries (`
 - `audit_logs` records actor, action, entity, timestamp for: title-transfer steps, status changes, document uploads/deletes, payment records, config/rate changes, user admin actions.
 - Trace id on every request; error responses carry it; logs carry it (correlate).
 - Audit rows are append-only (no update/delete endpoints).
+- Rows carry **only the changed columns** (old → new) as `jsonb` — never full row snapshots; timestamps/last-login are excluded and password hashes are redacted, so routine logins produce no rows (D-020).
 
 ## Operational security
 

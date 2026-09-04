@@ -7,6 +7,7 @@ Generated SQL for the `realestate_erp` PostgreSQL schema. **EF Core migrations a
 | File | EF migration | Contents |
 | --- | --- | --- |
 | `0001_InitialAuth.sql` | `InitialAuth` | `users` table (Guid/`uuid` PK), unique username index |
+| `0002_AddAuditLog.sql` | `AddAuditLog` | `audit_logs` table (append-only trail: actor, action, entity, `jsonb` diff), FKs + indexes |
 
 ## Applying
 
